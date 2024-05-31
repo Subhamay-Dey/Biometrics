@@ -5,12 +5,25 @@ import img1 from "../images/profile-logo-removebg-preview.png"
 import img2 from "../images/thumb_img.jpg"
 import { useRef } from 'react';
 import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 
 function Home() {
   
   const [profileImage, setProfileImage] = useState("");
   const [biometric, setbiometric] = useState("");
+  const [clientId, setClientId] = useState(""); // State for client ID
+  const [date, setDate] = useState(""); // State for date
   const [buttonPopup, setPopup] = useState(false);
+
+  useEffect(() => {
+    
+    const currentDate = new Date().toLocaleDateString('en-GB');
+    setDate(currentDate);
+
+    const newClientId = uuidv4();
+    setClientId(newClientId);
+  }, []);
+
 
   function handleImage(e){
       console.log(e.target.files);
@@ -28,34 +41,7 @@ function Home() {
     function changeImage(){
       imageRef.current.click();
     }
-
-  //   function sendImageData() {
-  //     const formData = new FormData();
-  //     if (profileImage) {
-  //         formData.append('profileImage', profileImage);
-  //     }
-  //     if (biometric) {
-  //         formData.append('biometric', biometric);
-  //     }
-
-  //     fetch('http://localhost:3000/submit', {
-  //         method: 'POST',
-  //         body: formData
-  //     })
-  //     .then(response => response.json())
-  //     .then(data => {
-  //         console.log('Success:', data);
-  //         // Handle response data as needed
-  //     })
-  //     .catch(error => {
-  //         console.error('Error:', error.message);
-  //     });
-  // }
-
-  // function handleSubmit() {
-  //   sendImageData();
-  // }
-
+    
   const submit = async(e) => {
     e.preventDefault();
 
@@ -109,7 +95,7 @@ function Home() {
           </div>
         </div>
 
-        <button className='px-5 h-[30px] font-semibold rounded-lg mt-4 bg-gradient-to-r from-green-500 to-green-300'>Back</button>
+        <button className='px-5 py-3 h-[30px] flex justify-center items-center font-semibold rounded-lg mt-4 bg-gradient-to-r from-green-500 to-green-300'>Back</button>
     </div>
 
     <button className="absolute top-[740px] left-[550px] px-5 py-3 bg-cyan-600 text-white rounded-md"  onClick={submit}>Submit</button>
