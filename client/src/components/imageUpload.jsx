@@ -9,10 +9,12 @@ export default function ImageUpload() {
         setImage(e.target.files[0])
     }
 
+    const imageRef = useRef(null);
+
   return (
     <>
     <div className='w-[400px] flex justify-center items-center'>
-    <input type="file" name='file' onChange={handleImage}/>
+    <input type="file" name='file' ref={imageRef} onChange={handleImage}/>
     </div>
     </>
   )
