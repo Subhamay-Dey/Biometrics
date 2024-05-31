@@ -17,14 +17,27 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 app.post('/submit', upload.fields([{ name: 'profileImage', maxCount: 1 }, { name: 'biometric', maxCount: 1 }]), (req, res) => {
-    // Handle image files
-    const profileImage = req.files['profileImage'][0];
-    const biometric = req.files['biometric'][0];
+    const clientId = req.body.clientId;
+    const date = req.body.date;
+    const profileImage = req.files['profileImage'] ? req.files['profileImage'][0] : null;
+    const biometric = req.files['biometric'] ? req.files['biometric'][0] : null;
 
-    // Here, you can process the image files as needed (e.g., save them to disk, perform image processing, etc.)
+    // Log or store data as needed
+    console.log('Client ID:', clientId);
+    console.log('Date:', date);
+    if (profileImage) {
+        console.log('Profile Image:', profileImage);
+    }
+    if (biometric) {
+        console.log('Biometric:', biometric);
+    }
 
-    // Send a response indicating success
-    res.json({ message: 'Image data received successfully', imageData: profileImage, biometricData: biometric });
+    if (!profileImage || !biometric) {
+        return res.status(400).json({ message: 'Profile image and biometric file are required' });
+    }
+
+    // Here, you can save the data to a database or perform other operations
+    res.json({ message: 'Data received successfully', clientId, date, profileImage, biometric });
 });
 
 

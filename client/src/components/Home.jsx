@@ -17,13 +17,13 @@ function Home() {
   const [buttonPopup, setPopup] = useState(false);
 
   useEffect(() => {
-
     const currentDate = new Date().toLocaleDateString('en-GB');
     setDate(currentDate);
 
     const newClientId = uuidv4();
     setClientId(newClientId);
   }, []);
+
 
 
   function handleImage(e){
@@ -51,6 +51,10 @@ function Home() {
     e.preventDefault();
 
     const formData = new FormData();
+
+        formData.append('clientId', clientId);
+        formData.append('date', date);
+
         if (profileImage) {
             formData.append('profileImage', profileImage);
         }
@@ -68,7 +72,7 @@ function Home() {
             // Handle response data as needed
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.log('Error:', error);
         });
   }
 
