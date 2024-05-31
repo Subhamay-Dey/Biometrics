@@ -1,6 +1,7 @@
 import React from 'react';
 import Popup from './popup';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import img1 from "../images/profile-logo-removebg-preview.png"
 import img2 from "../images/thumb_img.jpg"
 import { useRef } from 'react';
@@ -16,7 +17,7 @@ function Home() {
   const [buttonPopup, setPopup] = useState(false);
 
   useEffect(() => {
-    
+
     const currentDate = new Date().toLocaleDateString('en-GB');
     setDate(currentDate);
 
@@ -42,17 +43,27 @@ function Home() {
       imageRef.current.click();
     }
     
-  const submit = async(e) => {
+    function handleBiometric(e) {
+    setbiometric(e.target.files[0]);
+  }
+
+  async function submit(e) {
     e.preventDefault();
 
-    try {
-      alert("submitted")
-      await axios.post("http://localhost:3000/submit", {
-        biometric
-      })
+    const formData = new FormData();
+    formData.append('clientId', clientId);
+    formData.append('date', date);
+    formData.append('biometric', biometric);
 
+    try {
+      alert("Submitted");
+      await axios.post("http://localhost:3000/submit", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -60,7 +71,7 @@ function Home() {
   return (
     
     <div className='flex w-full h-screen justify-center items-center gap-[2px] relative'>
-    <div className='w-80 h-[460px] border-[2px] border-sky-400 bg-white' >
+    <div className='w-80 h-[460px] border-[2px] border-sky-400 bg-white'>
       <div className='w-full h-[300px] p-4 overflow-hidden flex justify-center items-center'>
         {profileImage ? <img className='w-[300px] p-4 flex justify-center items-center' src={URL.createObjectURL(profileImage)} alt="" size={10}  /> : <img src={img1} alt="" size={10} />}
         </div>
@@ -72,7 +83,9 @@ function Home() {
               <input type="file" name='file' ref={imageRef} onChange={handleImage}/>
             </div>
           </div>
-          <button className='px-5 h-[30px] font-semibold rounded-lg mt-4 bg-gradient-to-r from-green-500 to-green-300'>Back</button>
+          <div className='w-full h-10 mt-3 flex justify-center items-center'>
+            <button className='px-[30px] py-2 font-semibold rounded-lg bg-gradient-to-r from-green-500 to-green-300'>Back</button>
+          </div>
         </div>
     </div>
     <div className='absolute top-18 left-18'>
@@ -86,19 +99,20 @@ function Home() {
       </div>
         <div className='w-absolute top-[58%]'>
           <button className='w-full h-[40px] bg-sky-400 text-white' onClick={() => setPopup(true)}>Scan Finger</button>
-          <div className='w-full  mt-6 flex justify-center items-center'>
-          <div className='w-[200px] flex justify-center items-center leading-none whitespace-normal'>
-            <form action="POST">
+          <div className='w-full mt-6 flex justify-center items-center'>
+          <div className='w-[200px] flex justify-center items-center '>
+            <form action="POST" className='w-[200px] flex justify-center items-center leading-none whitespace-normal'>
             <input type="file" name='file' ref={biometricRef} onChange={handleBiometric}/>
             </form>
           </div>
           </div>
         </div>
-
-        <button className='px-5 py-3 h-[30px] flex justify-center items-center font-semibold rounded-lg mt-4 bg-gradient-to-r from-green-500 to-green-300'>Back</button>
+        <div className='w-full h-10 mt-3 flex justify-center items-center'>
+        <button className='px-[30px] py-2 font-semibold rounded-lg bg-gradient-to-r from-green-500 to-green-300'>Back</button>
+        </div>
     </div>
 
-    <button className="absolute top-[740px] left-[550px] px-5 py-3 bg-cyan-600 text-white rounded-md"  onClick={submit}>Submit</button>
+    <button className="absolute top-[740px] left-[885px] px-5 py-3 bg-cyan-600 text-white rounded-md"  onClick={submit}>Submit</button>
     </div>
     
   )
