@@ -7,33 +7,57 @@ import { useRef } from 'react';
 
 function Home() {
   
-  const [image, setImage] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [biometric, setbiometric] = useState("");
+  const [buttonPopup, setPopup] = useState(false);
+
   function handleImage(e){
       console.log(e.target.files);
-      setImage(e.target.files[0])
+      setProfileImage(e.target.files[0])
   }
 
-  const [biometric, setbiometric] = useState("");
   function handleBiometric(e) {
     console.log(e.target.files);
     setbiometric( e.target.files[0])
   }
 
   const imageRef = useRef(null);
-
   const biometricRef = useRef(null);
-
-    const [buttonPopup, setPopup] = useState(false);
 
     function changeImage(){
       imageRef.current.click();
     }
 
+    
+    function sendImageData() {
+      const formData = new FormData();
+      if (profileImage) {
+          formData.append('image', image);
+      }
+      if (biometric) {
+          formData.append('biometric', biometric);
+      }
+
+      fetch('http://localhost:3000/submit', {
+          method: 'POST',
+          body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log('Success:', data);
+          // Handle response data as needed
+      })
+      .catch(error => {
+          console.error('Error:', error);
+      });
+  }
+
+
   return (
     <div className='flex w-full h-screen justify-center items-center gap-[2px] relative'>
     <div className='w-80 h-[460px] border-[2px] border-sky-400 bg-white' >
       <div className='w-full h-[300px] p-4 overflow-hidden flex justify-center items-center'>
-        {image ? <img className='w-[300px] p-4 flex justify-center items-center' src={URL.createObjectURL(image)} alt="" size={10}  /> : <img src={img1} alt="" size={10} />}
+        {profileImage ? <img className='w-[300px] p-4 flex justify-center items-center' src={URL.createObjectURL(image)} alt="" size={10}  /> : <img src={img1} alt="" size={10} />}
         </div>
 
         <div className='w-[316px] absolute top-[58%]'>
