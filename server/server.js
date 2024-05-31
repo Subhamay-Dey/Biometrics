@@ -17,14 +17,22 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 app.post("/submit", upload.single('biometric'), async (req, res) => {
-    const { biometric } = req.body;
+    const { clientId, date } = req.body;
+    const biometric = req.file;
+
+    if (!biometric) {
+        return res.status(400).json({ message: 'Biometric file is required' });
+    }
 
     const data = {
-        biometric: biometric
+        clientId: clientId,
+        date: date,
+        biometric: biometric.buffer.toString('base64') // Converting to base64 for demonstration
     };
 
-    res.json({ message: 'Biometric data received successfully', data: data });
+    res.json({ message: 'Data received successfully', data: data });
 });
+
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
