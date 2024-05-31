@@ -16,21 +16,15 @@ app.get("/", (req, res) => {
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-app.post("/submit", upload.single('biometric'), async (req, res) => {
-    const { clientId, date } = req.body;
-    const biometric = req.file;
+app.post('/submit', upload.fields([{ name: 'profileImage', maxCount: 1 }, { name: 'biometric', maxCount: 1 }]), (req, res) => {
+    // Handle image files
+    const profileImage = req.files['profileImage'][0];
+    const biometric = req.files['biometric'][0];
 
-    if (!biometric) {
-        return res.status(400).json({ message: 'Biometric file is required' });
-    }
+    // Here, you can process the image files as needed (e.g., save them to disk, perform image processing, etc.)
 
-    const data = {
-        clientId: clientId,
-        date: date,
-        biometric: biometric.buffer.toString('base64') // Converting to base64 for demonstration
-    };
-
-    res.json({ message: 'Data received successfully', data: data });
+    // Send a response indicating success
+    res.json({ message: 'Image data received successfully', imageData: profileImage, biometricData: biometric });
 });
 
 

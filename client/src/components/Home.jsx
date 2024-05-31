@@ -51,20 +51,25 @@ function Home() {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('clientId', clientId);
-    formData.append('date', date);
-    formData.append('biometric', biometric);
+        if (profileImage) {
+            formData.append('profileImage', profileImage);
+        }
+        if (biometric) {
+            formData.append('biometric', biometric);
+        }
 
-    try {
-      alert("Submitted");
-      await axios.post("http://localhost:3000/submit", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-    } catch (error) {
-      console.error(error);
-    }
+        fetch('http://localhost:3000/submit', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Handle response data as needed
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
   }
 
 
