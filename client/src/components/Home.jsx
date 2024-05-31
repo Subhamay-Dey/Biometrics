@@ -4,6 +4,7 @@ import { useState } from 'react';
 import img1 from "../images/profile-logo-removebg-preview.png"
 import img2 from "../images/thumb_img.jpg"
 import { useRef } from 'react';
+import axios from "axios";
 
 function Home() {
   
@@ -28,36 +29,54 @@ function Home() {
       imageRef.current.click();
     }
 
-    
-    function sendImageData() {
-      const formData = new FormData();
-      if (profileImage) {
-          formData.append('image', image);
-      }
-      if (biometric) {
-          formData.append('biometric', biometric);
-      }
+  //   function sendImageData() {
+  //     const formData = new FormData();
+  //     if (profileImage) {
+  //         formData.append('profileImage', profileImage);
+  //     }
+  //     if (biometric) {
+  //         formData.append('biometric', biometric);
+  //     }
 
-      fetch('http://localhost:3000/submit', {
-          method: 'POST',
-          body: formData
+  //     fetch('http://localhost:3000/submit', {
+  //         method: 'POST',
+  //         body: formData
+  //     })
+  //     .then(response => response.json())
+  //     .then(data => {
+  //         console.log('Success:', data);
+  //         // Handle response data as needed
+  //     })
+  //     .catch(error => {
+  //         console.error('Error:', error.message);
+  //     });
+  // }
+
+  // function handleSubmit() {
+  //   sendImageData();
+  // }
+
+  const submit = async(e) => {
+    e.preventDefault();
+
+    try {
+      alert("submitted")
+      await axios.post("http://localhost:3000/submit", {
+        biometric
       })
-      .then(response => response.json())
-      .then(data => {
-          console.log('Success:', data);
-          // Handle response data as needed
-      })
-      .catch(error => {
-          console.error('Error:', error);
-      });
+
+    } catch (error) {
+      console.log(error);
+    }
   }
 
 
   return (
+    
     <div className='flex w-full h-screen justify-center items-center gap-[2px] relative'>
     <div className='w-80 h-[460px] border-[2px] border-sky-400 bg-white' >
       <div className='w-full h-[300px] p-4 overflow-hidden flex justify-center items-center'>
-        {profileImage ? <img className='w-[300px] p-4 flex justify-center items-center' src={URL.createObjectURL(image)} alt="" size={10}  /> : <img src={img1} alt="" size={10} />}
+        {profileImage ? <img className='w-[300px] p-4 flex justify-center items-center' src={URL.createObjectURL(profileImage)} alt="" size={10}  /> : <img src={img1} alt="" size={10} />}
         </div>
 
         <div className='w-[316px] absolute top-[58%]'>
@@ -83,16 +102,17 @@ function Home() {
           <button className='w-full h-[40px] bg-sky-400 text-white' onClick={() => setPopup(true)}>Scan Finger</button>
           <div className='w-full  mt-6 flex justify-center items-center'>
           <div className='w-[200px] flex justify-center items-center leading-none whitespace-normal'>
+            <form action="POST">
             <input type="file" name='file' ref={biometricRef} onChange={handleBiometric}/>
+            </form>
           </div>
           </div>
         </div>
 
-      
-        
+        <button className='px-5 h-[30px] font-semibold rounded-lg mt-4 bg-gradient-to-r from-green-500 to-green-300'>Back</button>
     </div>
 
-    
+    <button className="absolute top-[740px] left-[550px] px-5 py-3 bg-cyan-600 text-white rounded-md"  onClick={submit}>Submit</button>
     </div>
     
   )
