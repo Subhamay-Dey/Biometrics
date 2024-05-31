@@ -15,7 +15,15 @@ function Home() {
       setImage(e.target.files[0])
   }
 
+  const [biometric, setbiometric] = useState("");
+  function handleBiometric(e) {
+    console.log(e.target.files);
+    setbiometric( e.target.files[0])
+  }
+
   const imageRef = useRef(null);
+
+  const biometricRef = useRef(null);
 
     const [buttonPopup, setPopup] = useState(false);
 
@@ -25,18 +33,19 @@ function Home() {
 
   return (
     <div className='flex w-full h-screen justify-center items-center gap-[2px] relative'>
-    <div className='w-80 h-[450px] border-[2px] border-sky-400 bg-white' >
-      <div className='w-full h-[300px] p-4 overflow-hidden'>
-        {image ? <img className='' src={URL.createObjectURL(image)} alt="" size={10}  /> : <img src={img1} alt="" size={10} />}
+    <div className='w-80 h-[460px] border-[2px] border-sky-400 bg-white' >
+      <div className='w-full h-[300px] p-4 overflow-hidden flex justify-center items-center'>
+        {image ? <img className='w-[300px] p-4 flex justify-center items-center' src={URL.createObjectURL(image)} alt="" size={10}  /> : <img src={img1} alt="" size={10} />}
         </div>
 
-        <div className='w-[316px] absolute top-[60%]'>
+        <div className='w-[316px] absolute top-[58%]'>
           <button className='w-full h-[40px]  bg-sky-400 text-white'>Take Photo</button>
           <div className='w-full mt-6 flex justify-center items-center'>
             <div className='w-[200px] flex justify-center items-center leading-none whitespace-normal'>
               <input type="file" name='file' ref={imageRef} onChange={handleImage}/>
             </div>
           </div>
+          <button className='px-5 h-[30px] font-semibold rounded-lg mt-4 bg-gradient-to-r from-green-500 to-green-300'>Back</button>
         </div>
     </div>
     <div className='absolute top-18 left-18'>
@@ -44,16 +53,24 @@ function Home() {
             
         </Popup>
     </div>
-    <div className='w-96 h-[450px] border-[2px] border-sky-400 bg-white'>
-        <img src={img2} alt="" className='w-[200px] h-[300px] flex justify-center items-center ml-20'/>
-        <button className='w-full h-[40px] mt-4 bg-sky-400 text-white' onClick={() => setPopup(true)}>Scan Finger</button>
-        <div className='w-full  mt-6 flex justify-center items-center'>
-        <div className='w-[200px] flex justify-center items-center leading-none whitespace-normal'>
-    <input type="file" name='file'/>
-    </div>
+    <div className='w-96 h-[460px] border-[2px] border-sky-400 bg-white'>
+      <div className='w-full h-[300px] p-4 overflow-hidden flex justify-center items-center'>
+        {biometric ? <img className='w-[300px] p-4 flex justify-center items-center' src={URL.createObjectURL(biometric)} alt="" size={10} /> : <img src={img2} alt="" className='w-[212px] h-[260px] p-4'/>}
+      </div>
+        <div className='w-absolute top-[58%]'>
+          <button className='w-full h-[40px] bg-sky-400 text-white' onClick={() => setPopup(true)}>Scan Finger</button>
+          <div className='w-full  mt-6 flex justify-center items-center'>
+          <div className='w-[200px] flex justify-center items-center leading-none whitespace-normal'>
+            <input type="file" name='file' ref={biometricRef} onChange={handleBiometric}/>
+          </div>
+          </div>
         </div>
+
+      
         
     </div>
+
+    
     </div>
     
   )
