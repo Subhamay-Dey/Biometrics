@@ -1,10 +1,8 @@
 import React from 'react';
 import Popup from './popup';
 import { useState } from 'react';
-import { CgProfile } from "react-icons/cg";
 import img1 from "../images/profile-logo-removebg-preview.png"
 import img2 from "../images/thumb_img.jpg"
-import ImageUpload from './imageUpload';
 import { useRef } from 'react';
 
 function Home() {
