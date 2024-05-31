@@ -12,8 +12,8 @@ function Home() {
   
   const [profileImage, setProfileImage] = useState("");
   const [biometric, setbiometric] = useState("");
-  const [clientId, setClientId] = useState(""); // State for client ID
-  const [date, setDate] = useState(""); // State for date
+  const [clientId, setClientId] = useState("");
+  const [date, setDate] = useState("");
   const [buttonPopup, setPopup] = useState(false);
 
   useEffect(() => {
@@ -24,15 +24,11 @@ function Home() {
     setClientId(newClientId);
   }, []);
 
-
-
   function handleImage(e){
-      console.log(e.target.files);
       setProfileImage(e.target.files[0])
   }
 
   function handleBiometric(e) {
-    console.log(e.target.files);
     setbiometric( e.target.files[0])
   }
 
@@ -61,6 +57,11 @@ function Home() {
         if (biometric) {
             formData.append('biometric', biometric);
         }
+        if(profileImage && biometric) {
+          alert("submitted.")
+        } else {
+          alert("Please upload both profile image and biometric image.")
+        }
 
         fetch('http://localhost:3000/submit', {
             method: 'POST',
@@ -74,6 +75,16 @@ function Home() {
         .catch(error => {
             console.log('Error:', error);
         });
+  }
+
+  function handleBackButton(ref) {
+    ref.current.value = null; // Reset the file input
+    // Reset the image to the default image
+    if (ref === imageRef) {
+      setProfileImage("");
+    } else if (ref === biometricRef) {
+      setBiometric("");
+    }
   }
 
 
@@ -93,7 +104,7 @@ function Home() {
             </div>
           </div>
           <div className='w-full h-10 mt-3 flex justify-center items-center'>
-            <button className='px-[30px] py-2 font-semibold rounded-lg bg-gradient-to-r from-green-500 to-green-300'>Back</button>
+            <button className='px-[30px] py-2 font-semibold rounded-lg bg-gradient-to-r from-green-500 to-green-300' onClick={() => handleBackButton(imageRef)}>Back</button>
           </div>
         </div>
     </div>
@@ -117,11 +128,11 @@ function Home() {
           </div>
         </div>
         <div className='w-full h-10 mt-3 flex justify-center items-center'>
-        <button className='px-[30px] py-2 font-semibold rounded-lg bg-gradient-to-r from-green-500 to-green-300'>Back</button>
+        <button className='px-[30px] py-2 font-semibold rounded-lg bg-gradient-to-r from-green-500 to-green-300' onClick={() => handleBackButton(biometricRef)}>Back</button>
         </div>
     </div>
 
-    <button className="absolute top-[740px] left-[885px] px-5 py-3 bg-cyan-600 text-white rounded-md"  onClick={submit}>Submit</button>
+    <button className="absolute top-[740px] left-[885px] px-5 py-3 bg-cyan-600 text-white rounded-md" onClick={submit}>Submit</button>
     </div>
     
   )
